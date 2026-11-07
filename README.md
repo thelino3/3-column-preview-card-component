@@ -11,5 +11,5 @@ A modern, web-based Library Management System built with Python, Flask, and Boot
 ## 🚀 How to Run Locally
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/YOUR-USERNAME/library-management-system.git](https://github.com/YOUR-USERNAME/library-management-system.git)
+   git clone [https://github.com/thelino3/library-management-system.git](https://github.com/YOUR-USERNAME/library-management-system.git)
    cd library-management-system
