@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mt-4">
+    <!-- Register New Member Form -->
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Register New Member</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/members">
+                    <!-- University ID Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">University ID (Student ID)</label>
+                        <input type="text" name="member_id" class="form-control" placeholder="e.g., 20240192" required>
+                    </div>
+
+                    <!-- Full Name Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Full Name</label>
+                        <input type="text" name="name" class="form-control" placeholder="e.g., Ahmed Mohamed" required>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Email Address</label>
+                        <input type="email" name="email" class="form-control" placeholder="student@university.edu.eg"
+                            required>
+                    </div>
+
+                    <!-- Phone Field -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Phone Number</label>
+                        <input type="text" name="phone" class="form-control" placeholder="01xxxxxxxxx" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success w-100 fs-5">Register Member</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Members Directory -->
+
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Registered Members Directory</h5>
+            </div>
+            <div class="card-body p-0">
+                <table class="table table-striped table-hover mb-0 align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="ps-4">University ID</th>
+                            <th>Name</th>
+                            <th>Contact Info</th>
+                            {% if session.get('is_admin') %}
+                            <th class="text-center">Action</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr>
+                            <td class="ps-4"><strong>{{ member.id }}</strong></td>
+                            <td>{{ member.name }}</td>
+                            <td>
+                                {{ member.email }}<br>
+                                <small class="text-muted">{{ member.phone }}</small>
+                            </td>
+                            {% if session.get('is_admin') %}
+                            <td class="text-center">
+                                <form method="POST" action="/delete-member/{{ member.id }}"
+                                    onsubmit="return confirm('Remove this member?');">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                                </form>
+                            </td>
+                            {% endif %}
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="4" class="text-center text-muted py-4">No members registered yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

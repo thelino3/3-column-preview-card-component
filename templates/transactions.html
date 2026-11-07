@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row mb-4 mt-4">
+    <!-- Borrow Form -->
+    <div class="col-md-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark fw-bold">
+                <h5 class="mb-0">Borrow a Book</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="/transactions" class="row g-3 align-items-end">
+                    <input type="hidden" name="action" value="borrow">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Member ID</label>
+                        <!-- Note: You can find this ID on the Members page -->
+                        <input type="text" name="member_id" class="form-control" placeholder="e.g., M-1234" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold">Book ID</label>
+                        <!-- Note: You can find this ID on the Catalog page -->
+                        <input type="text" name="book_id" class="form-control" placeholder="e.g., a1b2c3d4" required>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-warning w-100 fs-5 fw-bold">Process Checkout</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transactions Log -->
+<div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+        <h5 class="mb-0">Transaction History & Returns</h5>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-bordered table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-3">Book</th>
+                    <th>Borrower</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Status / Fines</th>
+                    <th class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for txn in transactions %}
+                <tr>
+                    <td class="ps-3">
+                        <strong>{{ txn.book_title }}</strong><br>
+                        <small class="text-muted">ID: {{ txn.book_id }}</small>
+                    </td>
+                    <td>
+                        {{ txn.member_name }}<br>
+                        <small class="text-muted">{{ txn.member_id }}</small>
+                    </td>
+                    <td>{{ txn.borrow_date }}</td>
+                    <td>{{ txn.due_date }}</td>
+                    <td>
+                        {% if txn.status == 'Active' %}
+                        <span class="badge bg-primary">Active Loan</span>
+                        {% else %}
+                        <span class="badge bg-secondary">Returned</span>
+                        {% if txn.fine > 0 %}
+                        <br><span class="text-danger small fw-bold">Fine: {{ txn.fine }} EGP</span>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="text-center align-middle">
+                        {% if txn.status == 'Active' %}
+                        <form method="POST" action="/transactions" class="m-0">
+                            <input type="hidden" name="action" value="return">
+                            <input type="hidden" name="txn_id" value="{{ txn.txn_id }}">
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Return Book</button>
+                        </form>
+                        {% else %}
+                        <span class="text-muted small">Completed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">No transactions recorded yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

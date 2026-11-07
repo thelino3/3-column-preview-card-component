@@ -1,0 +1,58 @@
+{
+    "books": [
+        {
+            "id": "2cd4dbb9",
+            "title": "gaming",
+            "author": "samy",
+            "category": "bigger",
+            "total_copies": 1,
+            "available_copies": 1
+        }
+    ],
+    "members": [
+        {
+            "id": "202420138",
+            "name": "Ahmed mohamed",
+            "email": "ahmedmohamed442006@gmail.com",
+            "phone": "01114839386"
+        }
+    ],
+    "transactions": [
+        {
+            "txn_id": "15607901",
+            "book_id": "d9de10f9",
+            "book_title": "HACKERS BOOK",
+            "member_id": "M-7745",
+            "member_name": "Ahmed mohamed",
+            "borrow_date": "2026-11-06",
+            "due_date": "2026-11-20",
+            "return_date": "2026-11-07",
+            "fine": 0.0,
+            "status": "Returned"
+        },
+        {
+            "txn_id": "874e289a",
+            "book_id": "aa8cf12f",
+            "book_title": "elsokarya",
+            "member_id": "M-1e73",
+            "member_name": "salem",
+            "borrow_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "return_date": "2026-11-07",
+            "fine": 0.0,
+            "status": "Returned"
+        },
+        {
+            "txn_id": "6fb241e3",
+            "book_id": "aa8cf12f",
+            "book_title": "elsokarya",
+            "member_id": "M-1e73",
+            "member_name": "salem",
+            "borrow_date": "2026-11-07",
+            "due_date": "2026-11-21",
+            "return_date": "2026-11-07",
+            "fine": 0.0,
+            "status": "Returned"
+        }
+    ]
+}

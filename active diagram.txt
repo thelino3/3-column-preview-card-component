@@ -1,0 +1,29 @@
+[Start: Member selects "Return Book"]
+       │
+       ▼
+[Enter Member ID and Book ID]
+       │
+       ▼
+[Find Active Transaction in System]
+       │
+       ▼
+[Check current date vs. Due Date]
+       │
+       ├─► [If Return Date <= Due Date] ──► [Fine = $0.0]
+       │
+       └─► [If Return Date > Due Date] ──► [Calculate Overdue Days * Daily Fine Rate]
+                                               │
+                                               ▼
+                                   [Display Fine Amount to User]
+       │
+       ▼
+[Update Transaction status to "Returned"]
+       │
+       ▼
+[Increment Book available_copies by +1]
+       │
+       ▼
+[Save updated data to storage]
+       │
+       ▼
+[End: Display Success Message]

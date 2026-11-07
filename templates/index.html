@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <h2>Book Catalog</h2>
+
+    <!-- Search & Sort Form -->
+    <form class="d-flex gap-2" method="GET" action="/">
+        <!-- Search Input connected to API datalist -->
+        <div class="position-relative">
+            <input class="form-control me-2" type="search" id="searchInput" name="search" value="{{ search_query }}"
+                placeholder="Type title, author, or ID..." list="book-suggestions" autocomplete="off"
+                style="min-width: 260px;">
+            <datalist id="book-suggestions"></datalist>
+        </div>
+
+        <!-- Sort Dropdown -->
+        <select name="sort" class="form-select" onchange="this.form.submit()" style="min-width: 220px;">
+            <option value="default" {% if current_sort=='default' %}selected{% endif %}>Sort by Default</option>
+            <option value="copies_desc" {% if current_sort=='copies_desc' %}selected{% endif %}>Available Copies (High
+                to Low)</option>
+            <option value="copies_asc" {% if current_sort=='copies_asc' %}selected{% endif %}>Available Copies (Low to
+                High)</option>
+            <option value="total_desc" {% if current_sort=='total_desc' %}selected{% endif %}>Total Copies (High to Low)
+            </option>
+        </select>
+
+        <button class="btn btn-outline-primary" type="submit">Filter</button>
+    </form>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Category</th>
+                    <th>Available / Total</th>
+                    {% if session.get('is_admin') %}
+                    <th class="text-center">Admin Actions</th>
+                    {% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td><strong>{{ book.title }}</strong></td>
+                    <td>{{ book.author }}</td>
+                    <td><span class="badge bg-secondary">{{ book.category }}</span></td>
+                    <td>
+                        {% if book.available_copies > 0 %}
+                        <span class="text-success fw-bold">{{ book.available_copies }}</span>
+                        {% else %}
+                        <span class="text-danger fw-bold">Out of Stock</span>
+                        {% endif %}
+                        / {{ book.total_copies }}
+                    </td>
+                    {% if session.get('is_admin') %}
+                    <td class="text-center">
+                        <form method="POST" action="/delete-book/{{ book.id }}"
+                            onsubmit="return confirm('Delete this book?');">
+                            <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6" class="text-center text-muted py-4">No books found in the catalog.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- JavaScript to fetch live suggestions from /api/search-books -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const searchInput = document.getElementById('searchInput');
+        const datalist = document.getElementById('book-suggestions');
+
+        searchInput.addEventListener('input', async function () {
+            const query = this.value.trim();
+            if (query.length < 1) {
+                datalist.innerHTML = '';
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/search-books?q=${encodeURIComponent(query)}`);
+                const books = await response.json();
+
+                datalist.innerHTML = '';
+                books.forEach(book => {
+                    const option = document.createElement('option');
+                    option.value = book.title;
+                    option.label = `Author: ${book.author} | ID: ${book.id}`;
+                    datalist.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Error fetching live search API:", error);
+            }
+        });
+    });
+</script>
+{% endblock %}
